@@ -1,213 +1,182 @@
-// tool change 
+// Tool selection variables
 let pencil = document.querySelector("#pencil");
 let eraser = document.querySelector("#eraser");
 let rect = document.querySelector("#rect");
 let line = document.querySelector("#line");
 let options = document.querySelectorAll(".size-box");
-// identify -> click  -> again click
-pencil.addEventListener("click", function (e) {
-    if (cTool == "pencil") {
-        // second click
-        // options show 
-        options[0].style.display = "flex";
-    }
-    else {
-        for (let i = 0; i < options.length; i++) {
+let tools = document.querySelectorAll(".tool");
 
-            options[i].style.display = "none";
-        }
-        // eraser.style.border = "1px solid red";
-        //    all the props
-        cTool = "pencil";
-        tool.strokeStyle = "lightpink";
-        tool.lineWidth = pencilSize
-    }
-})
-eraser.addEventListener("click", function (e) {
-    if (cTool == "eraser") {
-        // second click
-        // options show 
-        options[1].style.display = "flex";
-    }
-    // first click
-    else {
-        // eraser.style.border = "1px solid red";
-        // koi aur clicked aur usko options visible to wo remove ho jaaye 
-        cTool = "eraser";
-        tool.strokeStyle = "white";
-        for (let i = 0; i < options.length; i++) {
-            options[i].style.display = "none";
-
-        }
-        tool.lineWidth = eraserSize;
-
-    }
-})
-rect.addEventListener("click", function (e) {
-    if (cTool == "rect") {
-        // second click
-        // options show 
-        options[2].style.display = "flex";
-    } else {
-        for (let i = 0; i < options.length; i++) {
-            options[i].style.display = "none";
-        }
-        // eraser.style.border = "1px solid red";
-        cTool = "rect";
-        tool.strokeStyle = "lightpink";
-        tool.lineWidth = rectSize;
-
-
-    }
-})
-line.addEventListener("click", function (e) {
-    if (cTool == "line") {
-        // second click
-        // options show 
-        options[3].style.display = "flex";
-    } else {
-        for (let i = 0; i < options.length; i++) {
-            options[i].style.display = "none";
-        }
-        // eraser.style.border = "1px solid red";
-        cTool = "line";
-        tool.strokeStyle = "lightpink";
-        tool.lineWidth = lineSize;
-    }
-})
-
-// color change
-let redColor = document.querySelector(".red");
-let greenColor = document.querySelector(".green");
-let blueColor = document.querySelector(".blue");
-redColor.addEventListener("click", function () {
-    tool.strokeStyle = "lightpink";
-})
-greenColor.addEventListener("click", function () {
-    tool.strokeStyle = "lightgreen";
-})
-blueColor.addEventListener("click", function () {
-    tool.strokeStyle = "lightblue";
-})
-
-// size change logic
-// pencil 
-// eraser
-// rect
-// line
+// Tool sizes
 let pencilSize = 5;
 let eraserSize = 5;
-let lineSize = 5;
 let rectSize = 5;
-let sizeBoxArr = document.querySelectorAll(".size-box");
-// currentTarget
-sizeBoxArr[0].addEventListener("click", function (e) {
-    // actual event  occur -> target
-    let elems = ["size1", "size2", "size3", "size4"];
-    // class
-    // jispe 
-    // console.log(e.target);
-    let allTheClasses = e.target.classList;
-    let firstClass = allTheClasses[0];
-    let test = elems.includes(firstClass);
-    if (test) {
-        // size waale button click;
-        if (firstClass == "size1") {
-            pencilSize = 5;
-        } else if (firstClass == "size2") {
-            pencilSize = 10;
-        } else if (firstClass == "size3") {
-            pencilSize = 15;
-        } else if (firstClass == "size4") {
-            pencilSize = 20;
-        }
+let lineSize = 5;
+
+// Activate a tool and update UI
+function activateTool(selectedTool) {
+    // Remove active class from all tools
+    tools.forEach(tool => tool.classList.remove('active'));
+    
+    // Add active class to selected tool
+    selectedTool.classList.add('active');
+    
+    // Hide all option boxes
+    for (let i = 0; i < options.length; i++) {
+        options[i].style.display = "none";
     }
-    console.log("pencilsize" + pencilSize);
-    tool.lineWidth = pencilSize;
-    // event listener -> currentTarget
-    // console.log(e.currentTarget)
-})
-sizeBoxArr[1].addEventListener("click", function (e) {
-    // actual event  occur -> target
-    let elems = ["size1", "size2", "size3", "size4"];
-    // class
-    // jispe 
-    // console.log(e.target);
-    let allTheClasses = e.target.classList;
-    let firstClass = allTheClasses[0];
-    let test = elems.includes(firstClass);
-
-    if (test) {
-        // size waale button click;
-        if (firstClass == "size1") {
-            eraserSize = 5;
-        } else if (firstClass == "size2") {
-            eraserSize = 10;
-        } else if (firstClass == "size3") {
-            eraserSize = 15;
-        } else if (firstClass == "size4") {
-            eraserSize = 20;
-        }
+    
+    // Update current tool
+    cTool = selectedTool.id;
+    
+    // Set appropriate tool properties
+    switch(cTool) {
+        case "pencil":
+            tool.strokeStyle = currentColor;
+            tool.lineWidth = pencilSize;
+            break;
+        case "eraser":
+            tool.strokeStyle = body.classList.contains('dark-mode') ? "#2d3436" : "white";
+            tool.lineWidth = eraserSize;
+            break;
+        case "rect":
+            tool.strokeStyle = currentColor;
+            tool.lineWidth = rectSize;
+            break;
+        case "line":
+            tool.strokeStyle = currentColor;
+            tool.lineWidth = lineSize;
+            break;
     }
-    // console.log("eraser" + eraserSize);
-    tool.lineWidth = eraserSize;
+    
+    // Update status display
+    updateStatus();
+}
 
-    // event listener -> currentTarget
-    // console.log(e.currentTarget)
-})
-sizeBoxArr[2].addEventListener("click", function (e) {
-    // actual event  occur -> target
-    let elems = ["size1", "size2", "size3", "size4"];
-    // class
-    // jispe 
-    // console.log(e.target);
-    let allTheClasses = e.target.classList;
-    let firstClass = allTheClasses[0];
-    let test = elems.includes(firstClass);
-
-
-    if (test) {
-        // size waale button click;
-        if (firstClass == "size1") {
-            rectSize = 5;
-        } else if (firstClass == "size2") {
-            rectSize = 10;
-        } else if (firstClass == "size3") {
-            rectSize = 15;
-        } else if (firstClass == "size4") {
-            rectSize = 20;
-        }
+// Tool click handlers
+pencil.addEventListener("click", function (e) {
+    if (cTool == "pencil") {
+        // Toggle size options on second click
+        options[0].style.display = options[0].style.display === "flex" ? "none" : "flex";
+    } else {
+        activateTool(pencil);
     }
-    tool.lineWidth = rectSize;
+});
 
-    // event listener -> currentTarget
-    // console.log(e.currentTarget)
-})
-sizeBoxArr[3].addEventListener("click", function (e) {
-    // actual event  occur -> target
-    let elems = ["size1", "size2", "size3", "size4"];
-    // class
-    // jispe 
-    // console.log(e.target);
-    let allTheClasses = e.target.classList;
-    let firstClass = allTheClasses[0];
-    let test = elems.includes(firstClass);
-
-
-    if (test) {
-        // size waale button click;
-        if (firstClass == "size1") {
-            lineSize = 5;
-        } else if (firstClass == "size2") {
-            lineSize = 10;
-        } else if (firstClass == "size3") {
-            lineSize = 15;
-        } else if (firstClass == "size4") {
-            lineSize = 20;
-        }
+eraser.addEventListener("click", function (e) {
+    if (cTool == "eraser") {
+        options[1].style.display = options[1].style.display === "flex" ? "none" : "flex";
+    } else {
+        activateTool(eraser);
     }
-    tool.lineWidth = lineSize;
+});
 
-    // event listener -> currentTarget
-    // console.log(e.currentTarget)
-})
+rect.addEventListener("click", function (e) {
+    if (cTool == "rect") {
+        options[2].style.display = options[2].style.display === "flex" ? "none" : "flex";
+    } else {
+        activateTool(rect);
+    }
+});
+
+line.addEventListener("click", function (e) {
+    if (cTool == "line") {
+        options[3].style.display = options[3].style.display === "flex" ? "none" : "flex";
+    } else {
+        activateTool(line);
+    }
+});
+
+// Color selection
+let colorElements = document.querySelectorAll(".color");
+let customColorPicker = document.querySelector("#custom-color");
+
+// Update all colors when one is clicked
+colorElements.forEach(colorEl => {
+    colorEl.addEventListener("click", function() {
+        // Remove active class from all colors
+        colorElements.forEach(el => el.classList.remove('active'));
+        
+        // Add active class to current color
+        colorEl.classList.add('active');
+        
+        // Get computed background color
+        currentColor = window.getComputedStyle(colorEl).backgroundColor;
+        
+        // Update tool color if not eraser
+        if (cTool !== "eraser") {
+            tool.strokeStyle = currentColor;
+        }
+        
+        // Update status
+        updateStatus();
+    });
+});
+
+// Custom color picker
+customColorPicker.addEventListener("input", function() {
+    // Remove active class from preset colors
+    colorElements.forEach(el => el.classList.remove('active'));
+    
+    // Set current color
+    currentColor = this.value;
+    
+    // Update tool color if not eraser
+    if (cTool !== "eraser") {
+        tool.strokeStyle = currentColor;
+    }
+    
+    // Update status
+    updateStatus();
+});
+
+// Size selection
+let sizeBoxes = document.querySelectorAll(".size-box");
+
+// Handle size selection for each tool
+sizeBoxes.forEach((sizeBox, index) => {
+    let sizes = sizeBox.querySelectorAll(".size");
+    
+    sizes.forEach((size, sizeIndex) => {
+        size.addEventListener("click", function() {
+            // Remove active class from all sizes
+            sizes.forEach(s => s.classList.remove('active'));
+            
+            // Add active class to selected size
+            size.classList.add('active');
+            
+            // Set size based on class and tool
+            let sizeValue = 5 + (sizeIndex * 5);
+            
+            switch(index) {
+                case 0: // Pencil
+                    pencilSize = sizeValue;
+                    if (cTool === "pencil") tool.lineWidth = pencilSize;
+                    break;
+                case 1: // Eraser
+                    eraserSize = sizeValue;
+                    if (cTool === "eraser") tool.lineWidth = eraserSize;
+                    break;
+                case 2: // Rectangle
+                    rectSize = sizeValue;
+                    if (cTool === "rect") tool.lineWidth = rectSize;
+                    break;
+                case 3: // Line
+                    lineSize = sizeValue;
+                    if (cTool === "line") tool.lineWidth = lineSize;
+                    break;
+            }
+            
+            // Update status
+            updateStatus();
+        });
+    });
+});
+
+// Close size options when clicking outside
+window.addEventListener("click", function(e) {
+    if (!e.target.closest(".tool") && !e.target.closest(".size-box")) {
+        options.forEach(option => {
+            option.style.display = "none";
+        });
+    }
+});
